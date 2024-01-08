@@ -1,0 +1,40 @@
+from sklearn.datasets import load_iris
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.model_selection import train_test_split
+import numpy as np
+
+# Load the Iris dataset
+iris_dataset = load_iris()
+targets = iris_dataset.target_names
+
+# Display class-number mapping
+print('Class : Number')
+for i, target in enumerate(targets):
+    print(f'{target} : {i}')
+
+# Split the data into training and testing sets
+X_train, X_test, Y_train, Y_test = train_test_split(iris_dataset.data, iris_dataset.target, random_state=42)
+
+# Create a KNeighborsClassifier with k=1
+kn = KNeighborsClassifier(n_neighbors=1)
+
+# Train the model
+kn.fit(X_train, Y_train)
+
+# Make predictions and evaluate accuracy
+correct_predictions = 0
+
+print("\nPredictions:")
+for i, x_test_sample in enumerate(X_test):
+    x_new = np.array([x_test_sample])
+    prediction = kn.predict(x_new)
+    actual_class = Y_test[i]
+    actual_class_name = targets[actual_class]
+
+    print(f"Sample {i + 1} - Actual: [{actual_class}] [{actual_class_name}], Predicted: {prediction} {targets[prediction[0]]}")
+
+    if prediction == actual_class:
+        correct_predictions += 1
+
+accuracy = correct_predictions / len(X_test)
+print("\nAccuracy:", accuracy)
